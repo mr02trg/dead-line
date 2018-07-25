@@ -4,11 +4,20 @@
           <label>From Date</label>
           <div class="form-group">
               <div class="input-group">
+                  <div class="input-group-prepend">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input type="checkbox"  [checked]="useCurrDate" (change)="useCurrDate = !useCurrDate">
+                            </div>
+                        </div>
+                  </div>
                   <input class="form-control"
                           name="fromDate" [(ngModel)]="startDateModel" 
+                          [disabled]="useCurrDate"
                           ngbDatepicker #fd="ngbDatepicker">
                   <div class="input-group-append">
-                      <button class="btn btn-outline-secondary" (click)="fd.toggle()" type="button">
+                      <button type="button" class="btn btn-outline-secondary" 
+                            (click)="fd.toggle()" [disabled]="useCurrDate">
                           <i class="fas fa-calendar-alt"></i>    
                       </button>
                   </div>

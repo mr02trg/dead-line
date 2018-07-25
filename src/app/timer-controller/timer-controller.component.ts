@@ -10,8 +10,9 @@ import { Task } from '../model/task.model';
 })
 export class TimerControllerComponent implements OnInit {
 
-  startDateModel: MyDateTime;
-  endDateModel: MyDateTime;
+  useCurrDate: boolean = false;
+  startDateModel: MyDateTime = null;
+  endDateModel: MyDateTime = null;
 
   showErrorMessage: boolean = false;
 
@@ -22,7 +23,7 @@ export class TimerControllerComponent implements OnInit {
   }
 
   isDisabled() {
-    if (this.startDateModel == null || this.endDateModel == null) {
+    if ((this.startDateModel == null && !this.useCurrDate) || this.endDateModel == null) {
       return true;
     }
     return false;
@@ -30,29 +31,34 @@ export class TimerControllerComponent implements OnInit {
 
   private isDateModelValid() {
     var res = true;
-    if (this.startDateModel.year > this.endDateModel.year) {
-      res = false;
+    if (this.startDateModel != null) {
+      if (this.startDateModel.year > this.endDateModel.year) {
+        res = false;
+      }
+      else if (this.startDateModel.month > this.endDateModel.month) {
+        res = false;
+      }
+      else if (this.startDateModel.day > this.endDateModel.day) {
+        res = false;
+      }
+      else if (this.startDateModel.year == this.endDateModel.year &&
+          this.startDateModel.month == this.endDateModel.month &&
+          this.startDateModel.day == this.endDateModel.day) {
+            res = false;
+          }
     }
-    else if (this.startDateModel.month > this.endDateModel.month) {
-      res = false;
-    }
-    else if (this.startDateModel.day > this.endDateModel.day) {
-      res = false;
-    }
-    else if (this.startDateModel.year == this.endDateModel.year &&
-        this.startDateModel.month == this.endDateModel.month &&
-        this.startDateModel.day == this.endDateModel.day) {
-          res = false;
-        }
     return res;
   }
 
   addTask() {
     if (!this.isDateModelValid()) {
       this.showErrorMessage = true;
+      console.log("Invalid input date time");
       return; 
+    }
+    if (this.useCurrDate) {
+      this.startDateModel = null;
     }
     this.taskManagementService.addNewTask(new Task(this.startDateModel, this.endDateModel, ""));
   }
-
 }

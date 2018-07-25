@@ -22,13 +22,26 @@ export class TimerComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    
-    var delay = this.createDate(this.fromDate) - new Date().getTime();
-    var endDate =this.createDate(this.toDate); 
+    var delay = 0;
+    var startDate = 0;
+    var endDate = this.createDate(this.toDate);
 
-    this.counter$ = timer(0, 1000).pipe(
+    // calculate delay
+    if (this.fromDate != null) {
+      startDate = this.createDate(this.fromDate);
+      delay = startDate - (new Date()).getTime();
+      if (delay <= 0) {
+        delay = 0;
+      }
+    }
+
+    if (startDate != 0) {
+      this.message = this.dhms((endDate - startDate)/1000);
+    }
+
+    this.counter$ = timer(delay, 1000).pipe(
       map(x => {
-        return Math.floor((endDate - new Date().getTime())/1000);
+        return Math.floor((endDate - (new Date()).getTime())/1000);
       })
     );
     this.subscription = this.counter$.subscribe(x => this.message = this.dhms(x));
@@ -38,13 +51,9 @@ export class TimerComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  addTask() {
-    var endDateModel = this.createDate(this.toDate);
-    
-  }
-
   private createDate (value : IMyDateTime) {
-    return new Date().setFullYear(value.year, value.month, value.day);
+    var event = new Date();
+    return event.setFullYear(value.year, value.month-1, value.day);
   }
 
   // convert second to date time format
@@ -67,8 +76,9 @@ export class TimerComponent implements OnInit, OnDestroy {
 }
 
   debug() {
-    console.log(this.fromDate);
-    console.log(this.toDate);
+    console.log('startDate', this.fromDate);
+    console.log('endDate', this.toDate);
+    console.log('currDate', new Date());
   }
 
 }
