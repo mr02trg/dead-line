@@ -1,0 +1,44 @@
+<form>
+  <div class="row">
+      <div class="col-md-6">
+          <label>From Date</label>
+          <div class="form-group">
+              <div class="input-group">
+                  <input class="form-control"
+                          name="fromDate" [(ngModel)]="startDateModel" 
+                          ngbDatepicker #fd="ngbDatepicker">
+                  <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" (click)="fd.toggle()" type="button">
+                          <i class="fas fa-calendar-alt"></i>    
+                      </button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <label>ToDate</label>
+          <div class="form-group">
+              <div class="input-group">
+                  <input class="form-control" 
+                          name="toDate" [(ngModel)]="endDateModel" 
+                          ngbDatepicker #td="ngbDatepicker">
+                  <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" (click)="td.toggle()" type="button">
+                          <i class="fas fa-calendar-alt"></i>    
+                      </button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="row justify-content-end p-2">
+      <button class="btn btn-primary"
+              [disabled] = "isDisabled()"
+              (click)="addTask()">
+          Add
+      </button>
+  </div>
+</form>
+<div class="row justify-content-end p-2" *ngIf="showErrorMessage">
+    Invalid Date Entered. Please try again!!
+</div>
